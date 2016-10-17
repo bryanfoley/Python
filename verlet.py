@@ -22,7 +22,7 @@ def make_particles(n):
     sy = (n + sx - 1) // sx
     start_id = Particle.next_id
     Particle.box_size = sqrt(Particle.density * n)
-    particles = [Particle(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0,0.0,gauss(10,0.5),1,0.0,0.0,0.0,0.0,0.0,0.0) for _ in range(n)]
+    particles = [Particle(0.0, 0.0, 0.0, 1.0, 0.0, 0.0, -1.0,0.0,0.0,gauss(10.5,0.5),1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0) for _ in range(n)]
     size = Particle.box_size
 
     # Make sure particles are not spatially sorted
@@ -92,7 +92,7 @@ def serial_simulation(n, steps, num_threads=1, normalize_energy=False,
 
     # Create particles
     particles = make_particles(n)
-    initial_energy = reduce(lambda x, p: x + p.energy, particles, 0)
+    #initial_energy = reduce(lambda x, p: x + p.energy, particles, 0)
 
     # Initialize visualization
     win, text = init_graphics((particles,), n, update_interval)
@@ -102,14 +102,17 @@ def serial_simulation(n, steps, num_threads=1, normalize_energy=False,
     for step in range(steps):
         # Compute forces
         for p1 in particles:
-            #p1.rtd2._x = p1.rtd2._y = 0 # reset accleration to 0
+           # p1.rtd2._x = p1.rtd2._y = 0 # reset accleration to 0
             p1.set_force_to_zero()
+            p1.predict()
+            p1.boundary()
             for p2 in particles:
-                p1.apply_force(p2)
+                if p2.id is not p1.id:
+                    p1.apply_force(p2)
+            p1.correct()
 
         # Move particles
         for p in particles:
-            p.move()
             # Energy normalization
             p.rtd1._x *= Particle.energy_correction
             p.rtd1._y *= Particle.energy_correction
