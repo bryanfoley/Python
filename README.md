@@ -52,6 +52,51 @@ Example — simulate 50 particles for 5,000 steps:
 docker run --rm particle-sim python verlet.py -n 50 -s 5000
 ```
 
+#### Run with visualization
+
+The simulation can render a live Tkinter window while running inside Docker. Because Tkinter relies on an X11 display server, you must forward your host's X11 socket into the container. The exact command differs by operating system.
+
+**Linux**
+
+```bash
+# Allow Docker to connect to your local X server
+xhost +local:docker
+
+docker run --rm \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  particle-sim python verlet.py -n 50 -s 1000 -v
+
+# Revoke the access grant when done (optional but recommended)
+xhost -local:docker
+```
+
+**macOS (requires [XQuartz](https://www.xquartz.org/))**
+
+1. Install and launch XQuartz.
+2. In XQuartz → Preferences → Security, enable **"Allow connections from network clients"** and restart XQuartz.
+3. Run:
+
+```bash
+xhost +localhost
+
+docker run --rm \
+  -e DISPLAY=host.docker.internal:0 \
+  particle-sim python verlet.py -n 50 -s 1000 -v
+```
+
+**Windows (requires an X server such as [VcXsrv](https://sourceforge.net/projects/vcxsrv/) or [Xming](https://sourceforge.net/projects/xming/))**
+
+1. Install and launch VcXsrv (or another X server). When starting VcXsrv, select **"Disable access control"**.
+2. Find your host IP that Docker can reach (often the `vEthernet (WSL)` adapter address, e.g. `192.168.x.x`).
+3. Run (replace `<host-ip>` with your actual IP):
+
+```bash
+docker run --rm \
+  -e DISPLAY=<host-ip>:0 \
+  particle-sim python verlet.py -n 50 -s 1000 -v
+```
+
 ### Run the unit tests
 
 ```bash
