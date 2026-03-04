@@ -1,0 +1,8 @@
+# This project uses only Python standard library modules:
+#   math, random, functools, time, os, sys, code, inspect, re, signal, unittest
+#
+# The graphics module (graphics.py) is a local wrapper around Tkinter.
+# Tkinter is included with Python but requires the system package python3-tk
+# on Debian/Ubuntu-based systems (installed in the Dockerfile).
+#
+# No third-party pip packages are required.

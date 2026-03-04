@@ -1,4 +1,3 @@
-import graphics
 from vector import Vec3D
 from math import sqrt
 colors = ['blue', 'orange', 'red', 'green', 'brown', 'purple', 'cyan', 'black']
@@ -42,6 +41,7 @@ class Particle(object):
         win is the graphics windown in which the particle should be drawn, rad
         is the radius of the particle, and owner is the thread/process number of
         the thread that owns this particle."""
+        import graphics
         p = graphics.Point(self.rtd0._x * self.scale_pos + self.rad +5,
                            self.rtd0._y * self.scale_pos + self.rad +5)
         self.graphic = graphics.Circle(p, self.rad)

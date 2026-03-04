@@ -1,5 +1,4 @@
 from random import random, seed, shuffle, gauss
-import graphics
 from math import ceil, sqrt
 from functools import reduce
 from time import time
@@ -47,6 +46,8 @@ def init_graphics(distribution, total, update_interval=1, size=600):
     simulation; the window size will be slightly larger."""
     if not update_interval:
         return None, None
+
+    import graphics
 
     psize = ceil(sqrt(10000 / total)) # particle size
     # Adjust window size so that particle edges do not go off the screen
